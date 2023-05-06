@@ -18,6 +18,13 @@
 typedef unsigned char cell_t;
 
 typedef struct {
+    cell_t **board;
+    cell_t **newboard;
+    int size;
+    int start;
+    int end;
+} args_t;
+typedef struct {
     unsigned int borns;
     unsigned int overcrowding;
     unsigned int loneliness;
