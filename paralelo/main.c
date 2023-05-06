@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <pthread.h>
 
 int main(int argc, char **argv)
 {
@@ -42,16 +43,18 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < steps; i++)
     {
+        
         args_t args_list[n_threads];
         pthread_t threads[n_threads];
 
-        int step = a_size / max_threads;
-        int remainder = a_size % max_threads;
+        int step = size / n_threads;
+        int remainder = size % n_threads;
         int prev_end = 0;
 
         for (int t = 0; t < n_threads; t++)
         {
-            args_list[t] = args;
+            args_t arg;
+            args_list[t] = arg;
 
             args_list[t].start = prev_end;
             // Executa uma espécie de pidgeonhole sort para que as operações sejam
@@ -68,14 +71,14 @@ int main(int argc, char **argv)
             args_list[t].newboard = next;
             args_list[t].size = size;
 
-            pthread_create(&threads[t], NULL, *play, (void *)&args_list[t])
+            pthread_create(&threads[t], NULL, *play, (void *)&args_list[t]);
         }
 
         stats_t stats_step;
 
         for (int t = 0; t < n_threads; t++)
         {
-            pthread_join(&threads[t], &stats_step)
+            pthread_join(&threads[t], &stats_step);
             stats_total.borns += stats_step.borns;
             stats_total.survivals += stats_step.survivals;
             stats_total.loneliness += stats_step.loneliness;
