@@ -59,16 +59,24 @@ int adjacent_to(cell_t **board, int size, int i, int j)
     return count;
 }
 
-stats_t play(cell_t **board, cell_t **newboard, int size)
+void * play(void * argumentos)
 {
     int i, j, a;
+
+    args_t* arg = (args_t *) argumentos;
+    
+    int start = arg->start;
+    int end = arg->end;
+    int size = arg->size;
+    cell_t** board = arg->board;
+    cell_t** newboard = arg->newboard;
 
     stats_t stats = {0, 0, 0, 0};
 
     /* for each cell, apply the rules of Life */
-    for (i = 0; i < size; i++)
+    for (i = start; i < end; i++)
     {
-        for (j = 0; j < size; j++)
+        for (j = start; j < end; j++)
         {
             a = adjacent_to(board, size, i, j);
 
