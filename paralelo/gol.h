@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <pthread.h>
 
 /*
  * The Game of Life
@@ -41,7 +42,7 @@ void free_board(cell_t ** board, int size);
 int adjacent_to(cell_t ** board, int size, int i, int j);
 
 /* Compute the next generation (newboard) based on the current generation (board) and returns its statistics */
-stats_t play(cell_t ** board, cell_t ** newboard, int size);
+void * play(void * argumentos);
 
 /* Print the GoL board */
 void print_board(cell_t ** board, int size);

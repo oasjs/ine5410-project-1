@@ -120,7 +120,7 @@ void * play(void * argumentos)
             }
         }
     }
-    p_thread_exit((void *) &stats);
+    pthread_exit((void *) &stats);
 }
 
 void print_board(cell_t **board, int size)

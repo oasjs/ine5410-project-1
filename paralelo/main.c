@@ -12,6 +12,7 @@ int main(int argc, char **argv)
     cell_t **prev, **next, **tmp;
     FILE *f;
     stats_t stats_total = {0, 0, 0, 0};
+    stats_t stats_step;
     int n_threads = 12; 
 
     if (argc != 2)
@@ -43,8 +44,6 @@ int main(int argc, char **argv)
 
     for (int i = 0; i < steps; i++)
     {
-        
-        args_t args_list[n_threads];
         pthread_t threads[n_threads];
 
         int step = size / n_threads;
@@ -54,31 +53,28 @@ int main(int argc, char **argv)
         for (int t = 0; t < n_threads; t++)
         {
             args_t arg;
-            args_list[t] = arg;
 
-            args_list[t].start = prev_end;
+            arg.start = prev_end;
             // Executa uma espécie de pidgeonhole sort para que as operações sejam
             // divididas da maneira mais igualitária possível entre as threads
             if (remainder > 0) {
-                args_list[t].end = args_list[t].start + step + 1;
+                arg.end = arg.start + step + 1;
                 remainder--;
             } else {
-                args_list[t].end = args_list[t].start + step;
+                arg.end = arg.start + step;
             }
-            prev_end = args_list[t].end;
+            prev_end = arg.end;
 
-            args_list[t].board = prev;
-            args_list[t].newboard = next;
-            args_list[t].size = size;
+            arg.board = prev;
+            arg.newboard = next;
+            arg.size = size;
 
-            pthread_create(&threads[t], NULL, *play, (void *)&args_list[t]);
+            pthread_create(&threads[t], NULL, *play, (void *)&arg);
         }
-
-        stats_t stats_step;
 
         for (int t = 0; t < n_threads; t++)
         {
-            pthread_join(&threads[t], &stats_step);
+            pthread_join(threads[t], (void *)&stats_step);
             stats_total.borns += stats_step.borns;
             stats_total.survivals += stats_step.survivals;
             stats_total.loneliness += stats_step.loneliness;
