@@ -42,38 +42,41 @@ int main(int argc, char **argv)
     print_stats(stats_step);
 #endif
 
-    for (int i = 0; i < steps; i++)
-    {
+    // Aloca um array de tamanho n_threads para os argumentos
+    args_t* argumentos = (args_t *)malloc(sizeof(args_t) * n_threads);
+
+    // Loop da iteração
+    for (int i = 0; i < steps; i++) {
+
         pthread_t threads[n_threads];
 
         int step = size / n_threads;
         int remainder = size % n_threads;
         int prev_end = 0;
 
-        for (int t = 0; t < n_threads; t++)
-        {
-            args_t arg;
 
-            arg.start = prev_end;
-            // Executa uma espécie de pidgeonhole sort para que as operações sejam
-            // divididas da maneira mais igualitária possível entre as threads
+        for (int t = 0; t < n_threads; t++) {
+
+            argumentos[t].start = prev_end;
+
+            /* Executa uma espécie de pidgeonhole sort para que as operações sejam
+               divididas da maneira mais igualitária possível entre as threads */
             if (remainder > 0) {
-                arg.end = arg.start + step + 1;
+                argumentos[t].end = argumentos[t].start + step + 1;
                 remainder--;
             } else {
-                arg.end = arg.start + step;
+                argumentos[t].end = argumentos[t].start + step;
             }
-            prev_end = arg.end;
+            prev_end = argumentos[t].end;
 
-            arg.board = prev;
-            arg.newboard = next;
-            arg.size = size;
+            argumentos[t].board = prev;
+            argumentos[t].newboard = next;
+            argumentos[t].size = size;
 
-            pthread_create(&threads[t], NULL, *play, (void *)&arg);
+            pthread_create(&threads[t], NULL, *play, (void *)&argumentos[t]);
         }
 
-        for (int t = 0; t < n_threads; t++)
-        {
+        for (int t = 0; t < n_threads; t++) {
             pthread_join(threads[t], (void *)&stats_step);
             stats_total.borns += stats_step.borns;
             stats_total.survivals += stats_step.survivals;
@@ -90,6 +93,8 @@ int main(int argc, char **argv)
         next = prev;
         prev = tmp;
     }
+
+free (argumentos);
 
 #ifdef RESULT
     printf("Final:\n");

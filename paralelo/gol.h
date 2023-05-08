@@ -25,6 +25,7 @@ typedef struct {
     int start;
     int end;
 } args_t;
+
 typedef struct {
     unsigned int borns;
     unsigned int overcrowding;
