@@ -74,7 +74,7 @@ void* play(void* arg)
     int n_lines = args.n_lines;
 
     /* for each cell, apply the rules of Life */
-    for (i = firstLine; i < n_lines; i++)
+    for (i = firstLine; i < firstLine + n_lines; i++)
     {
         for (j = 0; j < size; j++)
         {
