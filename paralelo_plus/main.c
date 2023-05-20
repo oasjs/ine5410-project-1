@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 
     if (argc != 3)
     {
-        printf("ERRO! Você deve digitar %s <nome do arquivo do tabuleiro>!\n\n", argv[0]);
+        printf("ERRO! Você deve digitar %s <nome do arquivo do tabuleiro> <n_threads>!\n\n", argv[0]);
         return 0;
     }
 
@@ -102,12 +102,11 @@ int main(int argc, char **argv)
     next = prev;
     prev = tmp;
 
-// #ifdef DEBUG
-//         printf("Step %d ----------\n", i + 1);
-//         print_board(next, size);
-//         print_stats(stats_step);
-// #endif
-
+#ifdef DEBUG
+        printf("Step %d ----------\n", i + 1);
+        print_board(next, size);
+        print_stats(stats_step);
+#endif
 #ifdef RESULT
     printf("Final:\n");
     print_board(prev, size);
