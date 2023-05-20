@@ -20,6 +20,11 @@ int main(int argc, char **argv)
         return 0;
     }
 
+    if (atoi(argv[2]) <= 0) {
+        printf("Número de threads deve ser maior do que 0!\n");
+        return 0;
+    }
+
     if ((f = fopen(argv[1], "r")) == NULL)
     {
         printf("ERRO! O arquivo de tabuleiro '%s' não existe!\n\n", argv[1]);
