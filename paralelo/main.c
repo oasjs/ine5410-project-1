@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include "gol.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <pthread.h>
+#include "gol.h"
 
 int main(int argc, char **argv)
 {
@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 
     if (argc != 3)
     {
-        printf("ERRO! Você deve digitar %s <nome do arquivo do tabuleiro>!\n\n", argv[0]);
+        printf("ERRO! Você deve digitar %s <nome do arquivo do tabuleiro> <n_threads>!\n\n", argv[0]);
         return 0;
     }
 
